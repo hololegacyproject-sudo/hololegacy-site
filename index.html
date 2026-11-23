@@ -3,9 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HoloLegacy</title>
+  <title>HoloLegacy Project</title>
+  <meta name="description" content="The HoloLegacy Project creates free holographic memorials for families who have lost a child, funded by PawLegacy, our paid pet memorial service.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="HoloLegacy Project">
+  <meta property="og:description" content="The HoloLegacy Project creates free holographic memorials for families who have lost a child, funded by PawLegacy, our paid pet memorial service.">
+  <meta property="og:url" content="https://hololegacyproject.online/">
+  <meta name="theme-color" content="#0f0c29">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -14,13 +24,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       text-align: center;
       padding: 20px;
       line-height: 1.6;
     }
     .container {
-      max-width: 700px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 920px;
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
       border-radius: 20px;
@@ -29,52 +42,253 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     h1 {
-      font-size: 3rem;
+      font-size: clamp(2rem, 7vw, 3rem);
       margin-bottom: 10px;
+      color: #00d2ff;
       background: linear-gradient(to right, #00d2ff, #3a7bd5);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .tagline { font-size: 1.3rem; opacity: 0.9; margin-bottom: 30px; }
-    p { font-size: 1.1rem; margin-bottom: 40px; opacity: 0.85; }
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      margin-bottom: 12px;
+    }
+    h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .tagline { font-size: 1.3rem; opacity: 0.9; margin-bottom: 24px; }
+    .mission, .founder, .intro, .section-text, .note, .support, .contact-line {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+    .founder { margin-bottom: 28px; }
+    .eyebrow {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
     .btn {
       display: inline-block;
       background: linear-gradient(to right, #00d2ff, #3a7bd5);
       color: white;
       text-decoration: none;
-      padding: 16px 40px;
+      padding: 16px 32px;
       border-radius: 50px;
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
     }
     .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 15px 30px rgba(0, 210, 255, 0.4);
     }
-    footer { margin-top: 50px; font-size: 0.9rem; opacity: 0.6; }
+    .btn:focus-visible, a:focus-visible {
+      outline: 2px solid #00d2ff;
+      outline-offset: 3px;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #00d2ff;
+      box-shadow: none;
+    }
+    .btn-secondary:hover { box-shadow: 0 8px 20px rgba(0, 210, 255, 0.25); }
+    .btn-small { padding: 12px 22px; font-size: 0.95rem; }
+    .sponsor { margin-bottom: 8px; }
+    .sponsor a, .contact-line a, footer a, .support a {
+      color: #7ad8ff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    #pawlegacy {
+      scroll-margin-top: 1.25rem;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      text-align: left;
+    }
+    #pawlegacy > h2, #pawlegacy > .eyebrow, #pawlegacy > .subhead, #pawlegacy > .intro {
+      text-align: center;
+    }
+    .subhead { font-size: 1.15rem; opacity: 0.92; margin-bottom: 20px; }
+    .packages {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin: 28px 0 16px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .card .price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 8px 0 14px;
+      color: #00d2ff;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(0, 210, 255, 0.18);
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: #fff;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    .placeholder {
+      font-style: italic;
+      opacity: 0.75;
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+    }
+    .note { font-size: 0.92rem; opacity: 0.8; margin-bottom: 32px; }
+    .preorder, .how, .cta-block, .contact-block {
+      margin: 32px 0;
+    }
+    .preorder, .cta-block, .contact-block { text-align: center; }
+    .how { text-align: left; }
+    .how ol {
+      margin: 16px auto 0;
+      max-width: 42rem;
+      padding-left: 1.25rem;
+    }
+    .how li { margin-bottom: 12px; }
+    .how li strong { display: inline; }
+    footer {
+      margin-top: auto;
+      padding-top: 36px;
+      font-size: 0.9rem;
+      opacity: 0.75;
+      text-align: center;
+    }
+    footer p { margin: 0; }
+    @media (min-width: 760px) {
+      .packages { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 32px 20px; }
+      .btn { width: 100%; }
+      .cta-row { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn { transition: none; }
+      .btn:hover { transform: none; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>HoloLegacy</h1>
-    <div class="tagline">Building the future, one legacy at a time</div>
-    <p>
-      Welcome to HoloLegacy.<br>
-      We’re creating something special.<br>
-      Join us and be part of the journey.
-    </p>
-       <a href="mailto:hello@hololegacyproject.online" class="btn" target="_blank">
-     
+    <header>
+      <h1 aria-label="Holo Legacy Project">HoloLegacy Project</h1>
+      <p class="tagline">Building the future, one legacy at a time</p>
+      <p class="mission">The HoloLegacy Project creates free holographic memorials for families who have lost a child, funded by PawLegacy, our paid pet memorial service.</p>
+      <p class="founder">Founded by Christina Roberts.</p>
+      <div class="cta-row">
+        <a class="btn" href="mailto:hololegacyproject@gmail.com?subject=HoloLegacy%20Memorial%20Request">Get Started / Join Now</a>
+        <a class="btn btn-secondary" href="#pawlegacy">See PawLegacy Packages</a>
+      </div>
+      <p class="sponsor"><a href="mailto:hololegacyproject@gmail.com?subject=HoloLegacy%20Sponsorship%20Inquiry">Sponsor / Partner with us</a></p>
+    </header>
 
+    <section id="pawlegacy" aria-labelledby="pawlegacy-heading">
+      <p class="eyebrow">PawLegacy</p>
+      <h2 id="pawlegacy-heading">A gentle way to keep them close</h2>
+      <p class="subhead">PawLegacy creates holographic memorials for beloved pets, made from the photos and memories you already have.</p>
+      <p class="intro">When a companion has shaped a home, it can be hard to know how to honor them. PawLegacy is here for that — whether they are still with you or you are remembering them after goodbye.</p>
+      <p class="intro">There is no need to rush. Share a little about them when you are ready, and we will follow up personally. A reservation is not a payment; we will talk before any deposit is collected.</p>
+      <p class="intro">Revenue from every PawLegacy memorial helps fund free memorials for children through The HoloLegacy Project.</p>
 
+      <div class="packages">
+        <article class="card">
+          <h3>Essential Presence</h3>
+          <p class="price">$349</p>
+          <!-- PLACEHOLDER: Paw to supply package details -->
+          <p class="placeholder">[NEEDS CHRISTINA'S INPUT — one sentence on what this package includes and who it is for.]</p>
+          <!-- TODO: replace with real Google Form URL -->
+          <a class="btn btn-small" href="https://forms.gle/PAWLEGACY_PREORDER_FORM_TBD">Reserve Essential Presence</a>
+        </article>
+        <article class="card">
+          <p class="badge">Most popular</p>
+          <h3>Legacy Light</h3>
+          <p class="price">$549</p>
+          <!-- PLACEHOLDER: Paw to supply package details -->
+          <p class="placeholder">[NEEDS CHRISTINA'S INPUT — one sentence on what this package includes and why families often choose it. Do not add extra claims beyond the confirmed “most popular” badge unless Christina wants different wording.]</p>
+          <!-- TODO: replace with real Google Form URL -->
+          <a class="btn btn-small" href="https://forms.gle/PAWLEGACY_PREORDER_FORM_TBD">Reserve Legacy Light</a>
+        </article>
+        <article class="card">
+          <h3>Eternal Companion</h3>
+          <p class="price">$849</p>
+          <!-- PLACEHOLDER: Paw to supply package details -->
+          <p class="placeholder">[NEEDS CHRISTINA'S INPUT — one sentence on what this package includes and who it is for.]</p>
+          <!-- TODO: replace with real Google Form URL -->
+          <a class="btn btn-small" href="https://forms.gle/PAWLEGACY_PREORDER_FORM_TBD">Reserve Eternal Companion</a>
+        </article>
+      </div>
+      <p class="note">Not sure which is right? You can tell us that on the reservation form. We will help you choose during a short consultation. Inclusions and timing will be confirmed with you before any payment. Production and delivery timelines: [NEEDS CHRISTINA'S INPUT].</p>
 
-      Get Started / Join Now
-    </a>
+      <div class="preorder">
+        <h3>A limited pre-order, this season</h3>
+        <p class="section-text">If you have been considering a PawLegacy memorial, you are welcome to reserve a place in our seasonal pre-order. Seasonal offer details will be confirmed before this block is published.</p>
+        <!-- PLACEHOLDER: not approved by Christina -->
+        <!-- Proposed offer: 15% off any package, with prices rounded to $297, $467, and $722, for the first 20 reservations that complete a deposit after a consultation. Proposed window: now through Monday, December 1, 2026, at 11:59 PM Pacific Time (America/Los_Angeles). If the 20 deposits are reached sooner, close the offer and continue to take regular reservations. Proposed alternate: $75 off any package for the same cap and deadline. -->
+        <p class="section-text">This is a real limit, not a countdown trick. Submitting the form does not charge you and does not, by itself, hold an offer spot. We will confirm whether the offer still applies, then send a separate deposit step after we talk.</p>
+      </div>
+
+      <div class="how">
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Tell us about them.</strong> Fill out a short reservation form with their name and a few details. Photos can wait. Nothing is charged at this step.</li>
+          <li><strong>We reach out in person.</strong> We will email or call you at a gentle pace to answer questions, confirm a package, and share any pre-order offer that still applies.</li>
+          <li><strong>A deposit, only after you are ready.</strong> If you wish to go forward, payment or a deposit is collected separately after that conversation. <!-- PLACEHOLDER: not approved by Christina --> <!-- Proposed deposit amount and terms are in the promo proposal; do not put a dollar amount here until Christina decides. --></li>
+          <li><strong>We make the memorial with care.</strong> You send photos through a secure link when you are ready. Timing from there: [NEEDS CHRISTINA'S INPUT]. We will be clear about the next step before work begins.</li>
+        </ol>
+      </div>
+
+      <p class="mission">PawLegacy is the pet memorial service of The HoloLegacy Project. Revenue from pet memorials helps fund free memorials for children.</p>
+      <!-- [NEEDS CHRISTINA'S INPUT if a more specific public sentence — for example a portion or amount — should replace this.] -->
+
+      <div class="cta-block">
+        <!-- TODO: replace with real Google Form URL -->
+        <a class="btn" href="https://forms.gle/PAWLEGACY_PREORDER_FORM_TBD">Reserve a PawLegacy memorial</a>
+        <p class="support">This form is a reservation, not a payment. We will be in touch at <a href="mailto:hololegacyproject@gmail.com">hololegacyproject@gmail.com</a> or <a href="tel:+14242425268">(424) 242-5268</a>.</p>
+        <p class="support">Prefer to write or call first? Email <a href="mailto:hololegacyproject@gmail.com">hololegacyproject@gmail.com</a> or call <a href="tel:+14242425268">(424) 242-5268</a>.</p>
+      </div>
+
+      <div class="contact-block">
+        <p class="contact-line">Questions, or not ready to fill out a form?</p>
+        <p class="contact-line">The HoloLegacy Project — PawLegacy</p>
+        <p class="contact-line"><a href="mailto:hololegacyproject@gmail.com">hololegacyproject@gmail.com</a><br>
+        <a href="tel:+14242425268">(424) 242-5268</a></p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 HoloLegacy · <a href="https://hololegacyproject.online">hololegacyproject.online</a> · <a href="mailto:hololegacyproject@gmail.com">hololegacyproject@gmail.com</a> · <a href="tel:+14242425268">(424) 242-5268</a></p>
+    </footer>
   </div>
-      <footer>© 2026 HoloLegacy · hololegacyproject.online</footer>
-
-
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js', { scope: './' });
+    }
+  </script>
 </body>
 </html>
