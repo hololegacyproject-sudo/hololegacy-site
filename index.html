@@ -12,7 +12,8 @@
   <meta name="theme-color" content="#0f0c29">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon.svg">
+  <link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -179,6 +180,18 @@
       text-align: center;
     }
     footer p { margin: 0; }
+    button.btn {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .ios-hint {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin: 0 0 16px;
+    }
     @media (min-width: 760px) {
       .packages { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
     }
@@ -204,7 +217,9 @@
       <div class="cta-row">
         <a class="btn" href="mailto:hololegacyproject@gmail.com?subject=HoloLegacy%20Memorial%20Request">Get Started / Join Now</a>
         <a class="btn btn-secondary" href="#pawlegacy">See PawLegacy Packages</a>
+        <button type="button" id="install-app" class="btn btn-secondary" hidden>Install the app</button>
       </div>
+      <p id="ios-install-hint" class="ios-hint" hidden>On iPhone: tap Share, then Add to Home Screen</p>
       <p class="sponsor"><a href="mailto:hololegacyproject@gmail.com?subject=HoloLegacy%20Sponsorship%20Inquiry">Sponsor / Partner with us</a></p>
     </header>
 
@@ -289,6 +304,45 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js', { scope: './' });
     }
+
+    (function () {
+      var installBtn = document.getElementById('install-app');
+      var iosHint = document.getElementById('ios-install-hint');
+      var ua = navigator.userAgent || '';
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo/.test(ua);
+      var deferredPrompt = null;
+
+      if (iosHint && isIOS && isSafari && !isStandalone) {
+        iosHint.hidden = false;
+      }
+
+      window.addEventListener('beforeinstallprompt', function (event) {
+        event.preventDefault();
+        deferredPrompt = event;
+        if (installBtn && !isStandalone) {
+          installBtn.hidden = false;
+        }
+      });
+
+      if (installBtn) {
+        installBtn.addEventListener('click', function () {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function () {
+            deferredPrompt = null;
+            installBtn.hidden = true;
+          });
+        });
+      }
+
+      window.addEventListener('appinstalled', function () {
+        deferredPrompt = null;
+        if (installBtn) installBtn.hidden = true;
+        if (iosHint) iosHint.hidden = true;
+      });
+    })();
   </script>
 </body>
 </html>
