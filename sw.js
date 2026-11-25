@@ -1,4 +1,4 @@
-const CACHE = 'hololegacy-v3';
+const CACHE = 'hololegacy-v4';
 const ASSETS = [
   './',
   './index.html',
